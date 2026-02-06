@@ -12,7 +12,8 @@ ALLOWED_PRIORITIES = ["Baixa", "Media", "Alta"]
 ALLOWED_STATUS = ["Resolvido", "Cancelado", "Em Atendimento"]
 
 # Padrão básico de email
-EMAIL_PATTERN = r'^[^@]+@[^@]+\.[^@]+$'
+EMAIL_PATTERN = r"^[^@]+@[^@]+\.[^@]+$"
+
 
 # Funções de validação
 def validar_nome(nome):
@@ -23,6 +24,7 @@ def validar_nome(nome):
         return None
     return nome
 
+
 def validar_email(email):
     """Valida email com padrão básico."""
     email = email.strip().lower()
@@ -30,6 +32,7 @@ def validar_email(email):
         print("Erro: Email inválido (ex: usuario@dominio.com).")
         return None
     return email
+
 
 def validar_setor(setor):
     """Valida setor: não vazio, mínimo 2 caracteres."""
@@ -39,6 +42,7 @@ def validar_setor(setor):
         return None
     return setor
 
+
 def validar_texto(texto, min_len=5, nome_campo="Texto"):
     """Valida texto genérico (ex: título, descrição)."""
     texto = texto.strip()
@@ -47,14 +51,9 @@ def validar_texto(texto, min_len=5, nome_campo="Texto"):
         return None
     return texto
 
-# Inicialização das tabelas
-repositorio_usuarios.inicializar_arquivo()
-repositorio_tecnicos.inicializar_arquivo()
-repositorio_chamados.inicializar_arquivo()
-
 
 def limpar_tela():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 
 def menu_principal():
@@ -67,15 +66,15 @@ def menu_principal():
         print("0. Sair")
         opcao = input("Escolha: ")
 
-        if opcao == '1':
+        if opcao == "1":
             menu_usuarios()
-        elif opcao == '2':
+        elif opcao == "2":
             menu_tecnicos()
-        elif opcao == '3':
+        elif opcao == "3":
             abrir_chamado()
-        elif opcao == '4':
+        elif opcao == "4":
             menu_gestao_chamados()
-        elif opcao == '0':
+        elif opcao == "0":
             break
         else:
             print("Opção inválida!")
@@ -86,28 +85,29 @@ def menu_usuarios():
     print("1. Cadastrar")
     print("2. Listar")
     op = input("Opção: ")
-    if op == '1':
+    if op == "1":
         nome = validar_nome(input("Nome: "))
         if not nome:
             return
-        
+
         email = validar_email(input("Email: "))
         if not email:
             return
-        
+
         setor = validar_setor(input("Setor: "))
         if not setor:
             return
-        
+
         novo_id = repositorio_usuarios.gerar_novo_id()
         u = Usuario(novo_id, nome, email, setor)
         repositorio_usuarios.salvar(u)
         print(f"Usuário {nome} cadastrado com ID {novo_id}!")
-    elif op == '2':
+    elif op == "2":
         lista = repositorio_usuarios.listar_todos()
         if not lista:
             print("Nenhum usuário cadastrado.")
-        for u in lista: print(u)
+        for u in lista:
+            print(u)
 
 
 def menu_tecnicos():
@@ -115,28 +115,31 @@ def menu_tecnicos():
     print("1. Cadastrar")
     print("2. Listar")
     op = input("Opção: ")
-    if op == '1':
+    if op == "1":
         nome = validar_nome(input("Nome: "))
         if not nome:
             return
-        
+
         email = validar_email(input("Email: "))
         if not email:
             return
-        
-        esp = validar_texto(input("Especialidade: "), min_len=3, nome_campo="Especialidade")
+
+        esp = validar_texto(
+            input("Especialidade: "), min_len=3, nome_campo="Especialidade"
+        )
         if not esp:
             return
-        
+
         novo_id = repositorio_tecnicos.gerar_novo_id()
         t = Tecnico(novo_id, nome, email, esp)
         repositorio_tecnicos.salvar(t)
         print(f"Técnico {nome} cadastrado com ID {novo_id}!")
-    elif op == '2':
+    elif op == "2":
         lista = repositorio_tecnicos.listar_todos()
         if not lista:
             print("Nenhum técnico cadastrado.")
-        for t in lista: print(t)
+        for t in lista:
+            print(t)
 
 
 def abrir_chamado():
@@ -146,9 +149,9 @@ def abrir_chamado():
     if not lista_usuarios:
         print("Nenhum usuário cadastrado. Cadastre um usuário primeiro.")
         return
-    
+
     print("Selecione o Usuário:")
-    for u in lista_usuarios: 
+    for u in lista_usuarios:
         print(u)
 
     try:
@@ -157,14 +160,18 @@ def abrir_chamado():
             print("Usuário não encontrado.")
             return
 
-        titulo = validar_texto(input("Título do Problema: "), min_len=5, nome_campo="Título")
+        titulo = validar_texto(
+            input("Título do Problema: "), min_len=5, nome_campo="Título"
+        )
         if not titulo:
             return
-        
-        desc = validar_texto(input("Descrição detalhada: "), min_len=10, nome_campo="Descrição")
+
+        desc = validar_texto(
+            input("Descrição detalhada: "), min_len=10, nome_campo="Descrição"
+        )
         if not desc:
             return
-        
+
         prioridade = input("Prioridade (Baixa/Media/Alta): ")
         prio_norm = prioridade.strip().capitalize()
         if prio_norm not in ALLOWED_PRIORITIES:
@@ -192,12 +199,14 @@ def menu_gestao_chamados():
 
         op = input("Opção: ")
 
-        if op == '1':
+        if op == "1":
             lista = relatorios.listar_chamados_abertos()
-            if not lista: print("Nenhum chamado aberto.")
-            for c in lista: print("-" * 30 + "\n" + str(c))
+            if not lista:
+                print("Nenhum chamado aberto.")
+            for c in lista:
+                print("-" * 30 + "\n" + str(c))
 
-        elif op == '2':
+        elif op == "2":
             uid = input("ID do Usuário: ")
             try:
                 uid_int = int(uid)
@@ -205,9 +214,10 @@ def menu_gestao_chamados():
                 print("ID inválido. Digite um número.")
                 continue
             lista = relatorios.listar_por_usuario(uid_int)
-            for c in lista: print("-" * 30 + "\n" + str(c))
+            for c in lista:
+                print("-" * 30 + "\n" + str(c))
 
-        elif op == '3':
+        elif op == "3":
             tid = input("ID do Técnico: ")
             try:
                 tid_int = int(tid)
@@ -215,9 +225,10 @@ def menu_gestao_chamados():
                 print("ID inválido. Digite um número.")
                 continue
             lista = relatorios.listar_por_tecnico(tid_int)
-            for c in lista: print("-" * 30 + "\n" + str(c))
+            for c in lista:
+                print("-" * 30 + "\n" + str(c))
 
-        elif op == '4':
+        elif op == "4":
             cid = input("ID do Chamado: ")
             try:
                 cid_int = int(cid)
@@ -228,7 +239,8 @@ def menu_gestao_chamados():
             chamado = repositorio_chamados.buscar_por_id(cid_int)
             if chamado:
                 print("Técnicos disponíveis:")
-                for t in repositorio_tecnicos.listar_todos(): print(t)
+                for t in repositorio_tecnicos.listar_todos():
+                    print(t)
                 tid = input("ID do Técnico para atribuir: ")
                 try:
                     tid_int = int(tid)
@@ -246,7 +258,7 @@ def menu_gestao_chamados():
             else:
                 print("Chamado não encontrado.")
 
-        elif op == '5':
+        elif op == "5":
             cid = input("ID do Chamado: ")
             try:
                 cid_int = int(cid)
@@ -257,7 +269,9 @@ def menu_gestao_chamados():
             chamado = repositorio_chamados.buscar_por_id(cid_int)
             if chamado:
                 print(f"Status atual: {chamado.status}")
-                novo_status = input("Novo Status (Resolvido/Cancelado/Em Atendimento): ")
+                novo_status = input(
+                    "Novo Status (Resolvido/Cancelado/Em Atendimento): "
+                )
 
                 # Normaliza e valida o status (case-insensitive)
                 match = None
@@ -267,7 +281,9 @@ def menu_gestao_chamados():
                         break
 
                 if not match:
-                    print("Status inválido. Use: Resolvido, Cancelado ou Em Atendimento.")
+                    print(
+                        "Status inválido. Use: Resolvido, Cancelado ou Em Atendimento."
+                    )
                     continue
 
                 chamado.status = match
@@ -281,9 +297,13 @@ def menu_gestao_chamados():
             else:
                 print("Chamado não encontrado.")
 
-        elif op == '0':
+        elif op == "0":
             break
 
 
 if __name__ == "__main__":
+    # Inicialização das tabelas
+    repositorio_usuarios.inicializar_arquivo()
+    repositorio_tecnicos.inicializar_arquivo()
+    repositorio_chamados.inicializar_arquivo()
     menu_principal()
