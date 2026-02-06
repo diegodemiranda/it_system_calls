@@ -21,7 +21,6 @@ Este projeto implementa um sistema de chamados (tickets) em linha de comando par
 Tecnologias / requisitos:
 
 - Python 3.9+
-- Dependência: `networkx` (importada no projeto, não usada ativamente)
 
 ## Estrutura do Repositório
 
@@ -34,7 +33,12 @@ Tecnologias / requisitos:
   - `relatorios.py` — funções de leitura/filtragem para relatórios
 - `data/` — arquivos CSV de persistência
   - `usuarios.csv`, `tecnicos.csv`, `chamados.csv`
+- `tests/` — testes automatizados com pytest
+  - `test_repositorios.py` — testes do fluxo básico de CRUD
+- `scripts/` — utilitários de inicialização
+  - `init_sample_data.py` — popula `data/` com registros de exemplo
 - `pyproject.toml` — metadados do projeto
+- `requirements.txt`, `requirements-dev.txt` — dependências
 
 ## Modelos de Dados
 
@@ -58,22 +62,18 @@ Ao fechar um chamado (`Resolvido` ou `Cancelado`), o campo `data_fechamento` é 
 ## Como Rodar
 
 1. Certifique-se de ter Python 3.9+ instalado.
-2. Instale dependências (opcional, apenas `networkx`):
-
-```bash
-python -m pip install networkx
-```
-
-3. Execute a aplicação CLI:
+2. Execute a aplicação CLI:
 
 ```bash
 python src/main.py
 ```
 
-Observações:
+**Observações:**
 
 - Ao iniciar, os repositórios chamam `inicializar_arquivo()` para criar os CSV com cabeçalhos caso não existam.
 - Os arquivos CSV ficam em `data/` (relativo à raiz do projeto).
+- Para pré-popular dados de exemplo: `python scripts/init_sample_data.py`
+- Para rodar testes: `pip install -r requirements-dev.txt && pytest -q`
 
 ## Fluxos Principais (CLI)
 
@@ -97,12 +97,11 @@ Formato de cabeçalhos:
 
 ## Pontos Importantes / Dívida Técnica
 
-1. Geração de ID: é sequencial lendo o arquivo; isso produz condições de corrida se houver múltiplas instâncias concorrentes.
-2. `tecnico_id` vazio é salvo como string vazia `""` no CSV; o modelo converte isso para `None` internamente.
-3. Validações são básicas (ex.: e-mail simples), sem verificação robusta.
-4. `networkx` está listado/importado mas não é usado atualmente.
-5. Falta tratamento de exceções em operações de I/O — operações de leitura/escrita podem levantar erros não tratados.
-6. Há um problema conhecido (typo) no repositório de chamados mencionado nas instruções internas do projeto — revise `repositorio_chamados.py` se encontrar erro ao salvar.
+1. **Geração de ID**: é sequencial lendo o arquivo; isso produz condições de corrida se houver múltiplas instâncias concorrentes.
+2. **`tecnico_id` vazio**: é salvo como string vazia `""` no CSV; o modelo converte isso para `None` internamente.
+3. **Validações básicas**: e-mail usa regex simples, sem verificação robusta ou DNS.
+4. **Tratamento de exceções**: repositórios possuem tratamento básico de I/O; melhorias possíveis em operações de escrita.
+5. **Atomicidade de atualização**: chamados usam arquivo temporário (`FILE_PATH + '.tmp'`) para atualização atômica via `os.replace()`.
 
 ## Contribuindo
 
@@ -110,10 +109,35 @@ Se quiser contribuir:
 
 - Siga o padrão existente: cada entidade tem um repositório (`repositorio_*.py`) e o modelo em `models.py`.
 - Ao adicionar features que precisam alterar registros existentes, mantenha a estratégia atual (ler e regravar CSV) ou considere migrar para um pequeno banco (SQLite) se desejar concorrência/segurança.
-- Escreva testes unitários (atualmente não há testes) e adicione um `requirements.txt` ou atualize `pyproject.toml` conforme necessário.
+- Adicione testes em `tests/` (use pytest) e atualize/execute via: `pytest -q`
+- Para ambientes de desenvolvimento, instale: `pip install -r requirements-dev.txt`
 
-Boas tarefas iniciais:
+Próximos Passos:
 
-- Adicionar validações mais robustas (emails, tempo, IDs)
-- Tratar exceções de I/O com mensagens de erro amigáveis
+- Validar dados de entrada mais rigorosamente (emails, datas).
+- Adicionar mensagens de feedback mais descritivas em caso de erro.
+- - Adicionar GitHub Actions para executar testes automaticamente.
+- - Para concorrência segura migrar persistência para SQLite ou banco relacional.
+- Considerar API REST (FastAPI/Flask) para acesso programático.
 
+
+## Como Rodar Testes
+
+```bash
+# Instalar dependências de desenvolvimento
+pip install -r requirements-dev.txt
+
+# Rodar testes
+pytest -q
+
+# Rodar com cobertura de código (opcional, requer pytest-cov)
+pytest --cov=src tests/
+```
+
+## Inicializar Dados de Exemplo
+
+```bash
+python scripts/init_sample_data.py
+```
+
+Isso cria registros de exemplo em `data/usuarios.csv`, `data/tecnicos.csv` e `data/chamados.csv` (apenas se os arquivos estiverem vazios).
