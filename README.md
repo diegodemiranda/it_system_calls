@@ -1,6 +1,6 @@
 # IT System Calls 🧑🏾‍💻
 
-Projeto CLI simples para gestão de chamados de suporte de TI usando arquivos CSV como persistência.
+Projeto CLI simples para gestão de chamados de suporte de TI usando arquivos CSV como persistênci realizado como projeto no Laboratório Interdisciplinar de Processamento e Análise de Imagens - LIPAI.
 
 ## Sumário
 
