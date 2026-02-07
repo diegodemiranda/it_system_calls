@@ -1,6 +1,8 @@
-# IT System Calls 🧑🏾‍💻
+# Projeto J - Sistema de Chamados de Suporte de TI 🧑🏾‍💻
 
-Projeto CLI simples para gestão de chamados de suporte de TI usando arquivos CSV como persistênci realizado como projeto no Laboratório Interdisciplinar de Processamento e Análise de Imagens - LIPAI.
+Desenvolver um sistema CLI para registrar e acompanhar chamados de suporte de TI
+(problemas em computadores, rede, sistemas etc.), como projeto no Laboratório Interdisciplinar de Processamento e Análise de Imagens - LIPAI. 
+
 
 ## Sumário
 
