@@ -118,8 +118,8 @@ Próximos Passos:
 
 - Validar dados de entrada mais rigorosamente (emails, datas).
 - Adicionar mensagens de feedback mais descritivas em caso de erro.
-- - Adicionar GitHub Actions para executar testes automaticamente.
-- - Para concorrência segura migrar persistência para SQLite ou banco relacional.
+- Adicionar GitHub Actions para executar testes automaticamente.
+- Para concorrência segura migrar persistência para SQLite ou banco relacional.
 - Considerar API REST (FastAPI/Flask) para acesso programático.
 
 
